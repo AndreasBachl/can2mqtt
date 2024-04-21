@@ -12,12 +12,14 @@ import (
 var csi []uint32       // subscribed IDs slice
 var csiLock sync.Mutex // CAN subscribed IDs Mutex
 var bus *can.Bus       // CAN-Bus pointer
+var extCanId = false
 
 // initializes the CANBus Interface and enters an infinite
 // loop that reads CAN-frames after that.
-func canStart(canInterface string) {
+func canStart(canInterface string, extendedcanid bool) {
 
 	var err error
+	extCanId = extendedcanid
 	if dbg {
 		fmt.Printf("canbushandler: initializing CAN-Bus interface %s\n", canInterface)
 	}
@@ -74,7 +76,7 @@ func canPublish(frame can.Frame) {
 		fmt.Println("canbushandler: sending CAN-Frame: ", frame)
 	}
 	// Check if ID is using more than 11-Bits:
-	if frame.ID >= 0x800 {
+	if extCanId {
 		// if so, enable extended frame format
 		frame.ID |= 0x80000000
 	}

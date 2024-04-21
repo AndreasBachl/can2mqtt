@@ -12,6 +12,8 @@ func main() {
 	conf := true
 	for i := 1; i < len(os.Args); i++ {
 		switch os.Args[i] {
+		case "-e":
+			C2M.SetExtendedCanId(true)
 		case "-v":
 			C2M.SetDbg(true)
 		case "-c":
